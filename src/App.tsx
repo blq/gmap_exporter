@@ -5,7 +5,16 @@ type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'csv';
 
 function App() {
   const [mapUrl, setMapUrl] = useState('');
-  const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('geojson');
+
+  const [selectedFormat, setSelectedFormat] = useState<ExportFormat>(() => {
+    const savedFormat = localStorage.getItem('selectedFormat');
+    return (savedFormat as ExportFormat) || 'geojson';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('selectedFormat', selectedFormat);
+  }, [selectedFormat]);
+
   const [isFormatMenuOpen, setIsFormatMenuOpen] = useState(false);
 
   const formats: { value: ExportFormat; label: string }[] = [
