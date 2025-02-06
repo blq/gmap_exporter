@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Map, Download, ChevronDown } from 'lucide-react';
 
 type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'csv';
@@ -15,6 +15,17 @@ function App() {
     { value: 'csv', label: 'CSV' }
   ];
 
+  useEffect(() => {
+    // Handle shared URLs
+    const params = new URLSearchParams(window.location.search);
+    const sharedUrl = params.get('url');
+    if (sharedUrl) {
+      setMapUrl(sharedUrl);
+      // Clean up the URL
+      window.history.replaceState({}, document.title, '/');
+    }
+  }, []);
+
   const handleExport = () => {
     // Handle export logic here
     console.log(`Exporting ${mapUrl} as ${selectedFormat}`);
@@ -29,7 +40,7 @@ function App() {
             <Map className="w-12 h-12 text-blue-600" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Maps Export Tool
+            Google Maps Export Tool
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Convert Google Maps location links to your preferred format. Simply paste your link and choose your export format.
