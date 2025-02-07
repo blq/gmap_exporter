@@ -1,0 +1,1 @@
+A single page landing for a online-tool to export data from Google Maps location links. Logo/name + a centered input box to input the url to the link. And a button-selector for which format to download, geosjon, gpx, kml or csv
