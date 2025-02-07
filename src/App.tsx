@@ -76,26 +76,25 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <div className="max-w-4xl mx-auto px-4 py-16">
+      <div className="mx-auto max-w-4xl px-4 py-16">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-4">
-            <Map className="w-12 h-12 text-blue-600" />
+        <div className="mb-16 text-center">
+          <div className="mb-4 flex items-center justify-center">
+            <Map className="h-12 w-12 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Google Maps Export Tool
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Convert Google Maps location links to your preferred format. Simply paste your link and choose your export format.
+          <h1 className="mb-4 text-4xl font-bold text-gray-900">Google Maps Export Tool</h1>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            Convert Google Maps location links to your preferred format. Simply paste your link and
+            choose your export format.
           </p>
         </div>
 
         {/* Main Form */}
-        <div className="bg-white rounded-xl shadow-xl p-8">
+        <div className="rounded-xl bg-white p-8 shadow-xl">
           <div className="space-y-6">
             {/* URL Input */}
             <div>
-              <label htmlFor="mapUrl" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="mapUrl" className="mb-2 block text-sm font-medium text-gray-700">
                 Google Maps URL
               </label>
               <input
@@ -104,7 +103,7 @@ function App() {
                 value={mapUrl}
                 onChange={(e) => setMapUrl(e.target.value)}
                 placeholder="Paste your Google Maps link here"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -114,14 +113,14 @@ function App() {
                 <button
                   type="button"
                   onClick={() => setIsFormatMenuOpen(!isFormatMenuOpen)}
-                  className="inline-flex items-center justify-between w-40 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="inline-flex w-40 items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  {formats.find(f => f.value === selectedFormat)?.label}
-                  <ChevronDown className="w-4 h-4 ml-2" />
+                  {formats.find((f) => f.value === selectedFormat)?.label}
+                  <ChevronDown className="ml-2 h-4 w-4" />
                 </button>
 
                 {isFormatMenuOpen && (
-                  <div className="absolute z-10 w-40 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg">
+                  <div className="absolute z-10 mt-2 w-40 rounded-lg border border-gray-300 bg-white shadow-lg">
                     {formats.map((format) => (
                       <button
                         key={format.value}
@@ -129,7 +128,7 @@ function App() {
                           setSelectedFormat(format.value);
                           setIsFormatMenuOpen(false);
                         }}
-                        className="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-blue-50 hover:text-blue-700 first:rounded-t-lg last:rounded-b-lg"
+                        className="block w-full px-4 py-2 text-left text-sm text-gray-700 first:rounded-t-lg last:rounded-b-lg hover:bg-blue-50 hover:text-blue-700"
                       >
                         {format.label}
                       </button>
@@ -141,9 +140,9 @@ function App() {
               <button
                 onClick={handleExport}
                 disabled={!mapUrl}
-                className="flex-1 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="inline-flex flex-1 items-center justify-center rounded-lg border border-transparent bg-blue-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                <Download className="w-5 h-5 mr-2" />
+                <Download className="mr-2 h-5 w-5" />
                 Export
               </button>
             </div>
@@ -154,28 +153,24 @@ function App() {
         </div>
 
         {/* Features */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-3">
           {[
             {
               title: 'Multiple Formats',
-              description: 'Export your location data in GeoJSON, GPX, KML, or CSV format'
+              description: 'Export your location data in GeoJSON, GPX, KML, or CSV format',
             },
             {
               title: 'Simple to Use',
-              description: 'Just paste your Google Maps link and choose your preferred format'
+              description: 'Just paste your Google Maps link and choose your preferred format',
             },
             {
               title: 'Instant Download',
-              description: 'Get your converted file immediately, no sign-up required'
-            }
+              description: 'Get your converted file immediately, no sign-up required',
+            },
           ].map((feature, index) => (
             <div key={index} className="text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600">
-                {feature.description}
-              </p>
+              <h3 className="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>
