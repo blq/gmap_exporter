@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Map, Download, ChevronDown } from 'lucide-react';
+import { ErrorMessage } from './components/ErrorMessage';
+import { isLocalMode, filenameFromResponseHeader, isValidUrl, triggerBlobDownload } from './utils';
 
 type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'csv';
 
@@ -16,12 +18,13 @@ function App() {
   }, [selectedFormat]);
 
   const [isFormatMenuOpen, setIsFormatMenuOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const formats: { value: ExportFormat; label: string }[] = [
     { value: 'geojson', label: 'GeoJSON' },
     { value: 'gpx', label: 'GPX' },
     { value: 'kml', label: 'KML' },
-    { value: 'csv', label: 'CSV' }
+    { value: 'csv', label: 'CSV' },
   ];
 
   useEffect(() => {
@@ -35,9 +38,40 @@ function App() {
     }
   }, []);
 
-  const handleExport = () => {
-    // Handle export logic here
+  const handleExport = async () => {
     console.log(`Exporting ${mapUrl} as ${selectedFormat}`);
+
+    try {
+      if (!isValidUrl(mapUrl)) {
+        throw new Error('Please enter a valid URL');
+      }
+      const url = new URL(mapUrl);
+      if (!(url.href.includes('google.com/maps') || url.href.includes('maps.app.goo.gl/'))) {
+        throw new Error('Please enter a valid Google Maps URL');
+      }
+
+      const baseUrl = isLocalMode()
+        ? 'http://127.0.0.1:8787'
+        : 'https://livetrack.fblomqvist.workers.dev';
+
+      const response = await fetch(
+        `${baseUrl}/exportGoogleFavs?format=${selectedFormat}&url=${encodeURIComponent(mapUrl)}`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to export location data');
+      }
+
+      const filename =
+        filenameFromResponseHeader(response) || `google_maps_favorites.${selectedFormat}`;
+
+      const blob = await response.blob();
+      triggerBlobDownload(blob, filename);
+
+      // Clear any previous errors
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    }
   };
 
   return (
@@ -113,6 +147,9 @@ function App() {
                 Export
               </button>
             </div>
+
+            {/* Error Message */}
+            {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
           </div>
         </div>
 
