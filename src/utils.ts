@@ -45,3 +45,13 @@ export function triggerBlobDownload(blob: Blob, filename: string): void {
   URL.revokeObjectURL(blobUrl);
   a.remove();
 }
+
+// another tiny convenience function, worth it?
+export async function triggerDownloadResponseAsFile(
+  response: Response,
+  { fallbackFilename = 'download' } = {}
+): Promise<void> {
+  const filename = filenameFromResponseHeader(response) || fallbackFilename;
+  const blob = await response.blob();
+  triggerBlobDownload(blob, filename);
+}

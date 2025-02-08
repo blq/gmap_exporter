@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Map, Download, ChevronDown } from 'lucide-react';
 import { ErrorMessage } from './components/ErrorMessage';
-import { isLocalMode, filenameFromResponseHeader, isValidUrl, triggerBlobDownload } from './utils';
+import {
+  isLocalMode,
+  filenameFromResponseHeader,
+  isValidUrl,
+  triggerBlobDownload,
+  triggerDownloadResponseAsFile,
+} from './utils';
 
 type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'kmz' | 'csv';
 
@@ -66,11 +72,9 @@ function App() {
         throw new Error('Failed to export location data');
       }
 
-      const filename =
-        filenameFromResponseHeader(response) || `google_maps_favorites.${selectedFormat}`;
-
-      const blob = await response.blob();
-      triggerBlobDownload(blob, filename);
+      triggerDownloadResponseAsFile(response, {
+        fallbackFilename: `google_maps_favorites.${selectedFormat}`,
+      });
 
       // Clear any previous errors
       setError(null);
