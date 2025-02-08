@@ -1,13 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Map, Download, ChevronDown } from 'lucide-react';
 import { ErrorMessage } from './components/ErrorMessage';
-import { isLocalMode, isValidUrl, triggerDownloadResponseAsFile } from './utils';
+import { SuccessMessage } from './components/SuccessMessage';
+import {
+  isLocalMode,
+  isValidUrl,
+  filenameFromResponseHeader,
+  triggerBlobDownload,
+  // triggerDownloadResponseAsFile,
+} from './utils';
 
 type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'kmz' | 'csv';
 
 function App() {
   const [mapUrl, setMapUrl] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>(() => {
     const savedFormat = localStorage.getItem('selectedFormat');
@@ -54,6 +62,7 @@ function App() {
     try {
       setIsExporting(true);
       setError(null);
+      setSuccess(null);
 
       if (!isValidUrl(mapUrl)) {
         throw new Error('Please enter a valid URL');
@@ -74,14 +83,22 @@ function App() {
         throw new Error('Failed to export location data');
       }
 
-      triggerDownloadResponseAsFile(response, {
-        fallbackFilename: `google_maps_favorites.${selectedFormat}`,
-      });
+      // triggerDownloadResponseAsFile(response, {
+      //   fallbackFilename: `google_maps_favorites.${selectedFormat}`,
+      // });
+
+      const filename =
+        filenameFromResponseHeader(response) || `google_maps_favorites.${selectedFormat}`;
+      const blob = await response.blob();
+      triggerBlobDownload(blob, filename);
+
+      setSuccess(`Successfully exported "${filename}"`);
 
       // Clear any previous errors
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      setSuccess(null);
     } finally {
       setIsExporting(false);
     }
@@ -163,6 +180,9 @@ function App() {
                 Export
               </button>
             </div>
+
+            {/* Success Message */}
+            {success && <SuccessMessage message={success} onDismiss={() => setSuccess(null)} />}
 
             {/* Error Message */}
             {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
