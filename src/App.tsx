@@ -162,7 +162,7 @@ function App() {
                           setSelectedFormat(format.value);
                           setIsFormatMenuOpen(false);
                         }}
-                        className="block w-full px-4 py-2 text-left text-sm text-gray-700 first:rounded-t-lg last:rounded-b-lg hover:bg-blue-50 hover:text-blue-700"
+                        className="block w-full px-4 py-2 text-left text-sm text-gray-700 first:rounded-t-lg last:rounded-b-lg hover:bg-blue-50 hover:text-blue-700 select-none"
                       >
                         {format.label}
                       </button>
