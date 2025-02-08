@@ -19,6 +19,7 @@ function App() {
 
   const [isFormatMenuOpen, setIsFormatMenuOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const formats: { value: ExportFormat; label: string }[] = [
     { value: 'geojson', label: 'GeoJSON' },
@@ -42,6 +43,9 @@ function App() {
     console.log(`Exporting ${mapUrl} as ${selectedFormat}`);
 
     try {
+      setIsExporting(true);
+      setError(null);
+
       if (!isValidUrl(mapUrl)) {
         throw new Error('Please enter a valid URL');
       }
@@ -71,6 +75,8 @@ function App() {
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -104,6 +110,7 @@ function App() {
                 onChange={(e) => setMapUrl(e.target.value)}
                 placeholder="Paste your Google Maps link here"
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                disabled={isExporting}
               />
             </div>
 
@@ -113,13 +120,14 @@ function App() {
                 <button
                   type="button"
                   onClick={() => setIsFormatMenuOpen(!isFormatMenuOpen)}
+                  disabled={isExporting}
                   className="inline-flex w-40 items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {formats.find((f) => f.value === selectedFormat)?.label}
                   <ChevronDown className="ml-2 h-4 w-4" />
                 </button>
 
-                {isFormatMenuOpen && (
+                {isFormatMenuOpen && !isExporting && (
                   <div className="absolute z-10 mt-2 w-40 rounded-lg border border-gray-300 bg-white shadow-lg">
                     {formats.map((format) => (
                       <button
@@ -139,7 +147,7 @@ function App() {
 
               <button
                 onClick={handleExport}
-                disabled={!mapUrl}
+                disabled={!mapUrl || isExporting}
                 className="inline-flex flex-1 items-center justify-center rounded-lg border border-transparent bg-blue-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Download className="mr-2 h-5 w-5" />
