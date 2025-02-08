@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Map, Download, ChevronDown } from 'lucide-react';
 import { ErrorMessage } from './components/ErrorMessage';
-import {
-  isLocalMode,
-  filenameFromResponseHeader,
-  isValidUrl,
-  triggerBlobDownload,
-  triggerDownloadResponseAsFile,
-} from './utils';
+import { isLocalMode, isValidUrl, triggerDownloadResponseAsFile } from './utils';
 
 type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'kmz' | 'csv';
 
 function App() {
   const [mapUrl, setMapUrl] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>(() => {
     const savedFormat = localStorage.getItem('selectedFormat');
@@ -22,6 +17,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('selectedFormat', selectedFormat);
   }, [selectedFormat]);
+
+  useEffect(() => {
+    // Focus the input field when component mounts
+    inputRef.current?.focus();
+  }, []);
 
   const [isFormatMenuOpen, setIsFormatMenuOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -111,6 +111,8 @@ function App() {
                 Google Maps URL
               </label>
               <input
+                autoFocus
+                ref={inputRef}
                 type="url"
                 id="mapUrl"
                 value={mapUrl}
