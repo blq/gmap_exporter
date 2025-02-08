@@ -47,11 +47,13 @@ export function triggerBlobDownload(blob: Blob, filename: string): void {
 }
 
 // another tiny convenience function, worth it?
+// returns filename (useful if different from fallback)
 export async function triggerDownloadResponseAsFile(
   response: Response,
   { fallbackFilename = 'download' } = {}
-): Promise<void> {
+): Promise<string> {
   const filename = filenameFromResponseHeader(response) || fallbackFilename;
   const blob = await response.blob();
   triggerBlobDownload(blob, filename);
+  return filename;
 }
