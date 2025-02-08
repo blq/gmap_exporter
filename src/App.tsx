@@ -3,7 +3,7 @@ import { Map, Download, ChevronDown } from 'lucide-react';
 import { ErrorMessage } from './components/ErrorMessage';
 import { isLocalMode, filenameFromResponseHeader, isValidUrl, triggerBlobDownload } from './utils';
 
-type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'csv';
+type ExportFormat = 'geojson' | 'gpx' | 'kml' | 'kmz' | 'csv';
 
 function App() {
   const [mapUrl, setMapUrl] = useState('');
@@ -25,6 +25,7 @@ function App() {
     { value: 'geojson', label: 'GeoJSON' },
     { value: 'gpx', label: 'GPX' },
     { value: 'kml', label: 'KML' },
+    { value: 'kmz', label: 'KMZ' },
     { value: 'csv', label: 'CSV' },
   ];
 
@@ -165,7 +166,7 @@ function App() {
           {[
             {
               title: 'Multiple Formats',
-              description: 'Export your location data in GeoJSON, GPX, KML, or CSV format',
+              description: 'Export your location data in GeoJSON, GPX, KML/KMZ, or CSV format',
             },
             {
               title: 'Simple to Use',
