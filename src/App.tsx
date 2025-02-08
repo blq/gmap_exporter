@@ -38,10 +38,11 @@ function App() {
   useEffect(() => {
     // Handle shared URLs
     const params = new URLSearchParams(window.location.search);
-    const sharedUrl = params.get('url'); // || urlParams.get('text'); ?
+    const sharedUrl = params.get('url') || params.get('text');
     if (sharedUrl) {
-      setMapUrl(sharedUrl);
+      // todo: hmm, should we validate at once? or wait for user to click export?
       // todo: option to immediately trigger download? (if possible)
+      setMapUrl(sharedUrl);
       // Clean up the URL
       window.history.replaceState({}, document.title, '/');
     }
