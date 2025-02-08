@@ -38,9 +38,10 @@ function App() {
   useEffect(() => {
     // Handle shared URLs
     const params = new URLSearchParams(window.location.search);
-    const sharedUrl = params.get('url');
+    const sharedUrl = params.get('url'); // || urlParams.get('text'); ?
     if (sharedUrl) {
       setMapUrl(sharedUrl);
+      // todo: option to immediately trigger download? (if possible)
       // Clean up the URL
       window.history.replaceState({}, document.title, '/');
     }
