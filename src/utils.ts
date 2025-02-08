@@ -2,6 +2,7 @@
  * talk to local dev API or prod
  */
 export function isLocalMode(): boolean {
+  // or maybe use port nr?
   return new URLSearchParams(location.search).has('local');
 }
 
@@ -34,12 +35,13 @@ export function filenameFromResponseHeader(
 }
 
 export function triggerBlobDownload(blob: Blob, filename: string): void {
-  const blobUrl = window.URL.createObjectURL(blob);
+  const blobUrl = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.style.display = 'none';
   a.href = blobUrl;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
-  window.URL.revokeObjectURL(blobUrl);
+  URL.revokeObjectURL(blobUrl);
+  a.remove();
 }
