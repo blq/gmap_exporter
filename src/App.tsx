@@ -137,6 +137,12 @@ function App() {
                 placeholder="Paste your Google Maps link here"
                 className="w-full rounded-lg border border-gray-300 px-4 py-3 transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                 disabled={isExporting}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleExport();
+                  }
+                }}
               />
             </div>
 
