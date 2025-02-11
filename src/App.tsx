@@ -51,6 +51,7 @@ function App() {
       // todo: hmm, should we validate at once? or wait for user to click export?
       // todo: option to immediately trigger download? (if possible)
       setMapUrl(sharedUrl);
+      handleExport(); // test immediate trigger
       // Clean up the URL
       window.history.replaceState({}, document.title, '/');
     }
