@@ -38,9 +38,9 @@ function App() {
   const formats: { value: ExportFormat; label: string }[] = [
     { value: 'geojson', label: 'GeoJSON' },
     { value: 'gpx', label: 'GPX' },
+    { value: 'csv', label: 'CSV' },
     { value: 'kml', label: 'KML' },
     { value: 'kmz', label: 'KMZ' },
-    { value: 'csv', label: 'CSV' },
   ];
 
   const handleExport = useCallback(async () => {
@@ -99,9 +99,9 @@ function App() {
       // todo: hmm, should we validate at once? or wait for user to click export?
       // todo: option to immediately trigger download? (if possible)
       setMapUrl(sharedUrl);
-      handleExport(); // test immediate trigger (delayed?)
+      // handleExport(); // test immediate trigger (delayed?) kindof works! but.. now it triggers also on the ui changes, like format change. how tod detect if from real share?
       // Clean up the URL
-      // window.history.replaceState({}, document.title, '/');
+      window.history.replaceState({}, document.title, '/');
     }
   }, [handleExport]);
 
