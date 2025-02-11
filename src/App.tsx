@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Map, Download, ChevronDown } from 'lucide-react';
 import { ErrorMessage } from './components/ErrorMessage';
 import { SuccessMessage } from './components/SuccessMessage';
@@ -43,21 +43,7 @@ function App() {
     { value: 'csv', label: 'CSV' },
   ];
 
-  useEffect(() => {
-    // Handle shared URLs
-    const params = new URLSearchParams(window.location.search);
-    const sharedUrl = params.get('url') || params.get('text');
-    if (sharedUrl) {
-      // todo: hmm, should we validate at once? or wait for user to click export?
-      // todo: option to immediately trigger download? (if possible)
-      setMapUrl(sharedUrl);
-      handleExport(); // test immediate trigger
-      // Clean up the URL
-      window.history.replaceState({}, document.title, '/');
-    }
-  }, []);
-
-  const handleExport = async () => {
+  const handleExport = useCallback(async () => {
     console.log(`Exporting ${mapUrl} as ${selectedFormat}`);
 
     try {
@@ -103,7 +89,21 @@ function App() {
     } finally {
       setIsExporting(false);
     }
-  };
+  }, [mapUrl, selectedFormat]);
+
+  useEffect(() => {
+    // Handle shared URLs
+    const params = new URLSearchParams(window.location.search);
+    const sharedUrl = params.get('url') || params.get('text');
+    if (sharedUrl) {
+      // todo: hmm, should we validate at once? or wait for user to click export?
+      // todo: option to immediately trigger download? (if possible)
+      setMapUrl(sharedUrl);
+      handleExport(); // test immediate trigger (delayed?)
+      // Clean up the URL
+      window.history.replaceState({}, document.title, '/');
+    }
+  }, [handleExport]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
