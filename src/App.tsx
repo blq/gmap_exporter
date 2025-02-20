@@ -63,9 +63,12 @@ function App() {
         ? 'http://127.0.0.1:8787'
         : 'https://livetrack.fblomqvist.workers.dev';
 
-      const response = await fetch(
-        `${baseUrl}/exportGoogleFavs?format=${selectedFormat}&url=${encodeURIComponent(mapUrl)}`
-      );
+      const args = new URLSearchParams({
+        url: mapUrl,
+        format: selectedFormat,
+      });
+
+      const response = await fetch(`${baseUrl}/exportGoogleFavs?url=${args}`);
       if (!response.ok) {
         throw new Error('Failed to export location data');
       }
